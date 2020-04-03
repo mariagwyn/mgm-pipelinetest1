@@ -1,0 +1,8 @@
+<p *ngFor="let para of compiledValue; let paraIndex = index">
+  <span class="chunk"
+    venite-selectable
+    [citation]="label ? { label: label } : undefined"
+    [attr.id]="uid+'-'+paraIndex+'-'+chunkIndex"
+    *ngFor="let chunk of para; let chunkIndex = index"
+    [innerHTML]="chunk | typography:true:chunkIndex:value[paraIndex].length"></span>
+</p>

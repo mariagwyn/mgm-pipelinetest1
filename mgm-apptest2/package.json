@@ -1,0 +1,11 @@
+{
+  "name": "mgm-apptest1",
+  "version": "1.0.0",
+  "description": "Testing a Heroku App with Nodejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Maria Gwyn McDowell",
+  "license": "ISC"
+}

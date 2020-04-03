@@ -1,0 +1,10 @@
+<p>
+  <span
+    venite-selectable
+    [citation]="{string: source}"
+    [attr.id]="uid">{{value}}</span>
+  <span *ngIf="!response" class="response"> Amen.</span>
+  <span *ngIf="response && response.length <= 5" class="response"> {{ response }}</span>
+  <span class="citation">{{ source }}</span>
+</p>
+<p *ngIf="response && response.length > 5" class="response"> {{ response }}</p>

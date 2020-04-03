@@ -1,0 +1,112 @@
+<ion-card [class]="hidden ? 'object hidden' : 'object'" *ngIf="!opt.hidden || bulletinEditor">
+  <ion-card-header *ngIf="options || bulletinEditor || opt.value && opt.value[opt.selected] && opt.value[opt.selected].canticle">
+    <ion-toolbar>
+      <ion-card-title slot="start" *ngIf="options && !omitLabel">{{ label }}</ion-card-title>
+      <ion-buttons slot="end">
+        <ion-segment *ngIf="options && options.length <= 2 && !optionsAreLong" [(ngModel)]="opt.selected" (ionChange)="selectedChange()" color="primary" class="option-select">
+          <ion-segment-button *ngFor="let option of options; let ii = index" [value]="ii">
+            <ion-label class="selectable">{{ option.label }}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+        <ion-select *ngIf="options && options.length > 2 || optionsAreLong"[(ngModel)]="opt.selected" (ionChange)="selectedChange()" class="option-select">
+          <ion-select-option *ngFor="let option of options; let ii = index" [value]="ii">
+            <ion-label>{{ option.label }}</ion-label>
+          </ion-select-option>
+        </ion-select>
+      </ion-buttons>
+      <ng-container *ngIf="opt.value && opt.value[opt.selected] && opt.value[opt.selected].canticle">
+        <ion-buttons slot="end">
+          <ion-button (click)="canticleMenu()">
+            <ion-icon name="swap" slot="start"></ion-icon>
+            <ion-label i18n>Change Canticle</ion-label>
+          </ion-button>
+        </ion-buttons>
+        <ion-select #canticleSelect (ionChange)="addOption($event, 'canticle')" class="display-hidden">
+          <ion-select-option *ngFor="let co of canticleOptions" [value]="co.id">{{ co.number }}. {{ co.localname }} <ng-container *ngIf="co.version && co.version !== 'bcp1979'">({{ co.version_label }})</ng-container></ion-select-option>
+        </ion-select>
+      </ng-container>
+      <ng-container *ngIf="isPsalm">
+        <ion-buttons slot="end">
+          <ion-button (click)="psalmMenu()">
+            <ion-icon name="swap" slot="start"></ion-icon>
+            <ion-label i18n>Change Psalm</ion-label>
+          </ion-button>
+        </ion-buttons>
+        <ion-select #psalmSelect (ionChange)="addOption($event, 'psalm')" class="display-hidden">
+          <ion-select-option *ngFor="let number of psalmOptions" [value]="number" i18n>Psalm {{ number }}</ion-select-option>
+        </ion-select>
+      </ng-container>
+      <ng-container *ngIf="opt.value && opt.value[opt.selected] && opt.value[opt.selected].type == 'scripture' && bulletinEditor">
+        <ion-buttons slot="end">
+          <ion-button (click)="toggleChangeScripture()" *ngIf="!changeScripture">
+            <ion-icon name="swap" slot="start"></ion-icon>
+            <ion-label i18n>Change Scripture</ion-label>
+          </ion-button>
+          <ion-input *ngIf="changeScripture" #scriptureInput [(ngModel)]="scriptureCitation"></ion-input>
+          <ion-button *ngIf="changeScripture" (click)="setScripture(scriptureCitation)">
+            <ion-icon name="checkmark" slot="start"></ion-icon>
+            <ion-label i18n class="display-hidden">Change Scripture</ion-label>
+          </ion-button>
+        </ion-buttons>
+      </ng-container>
+      <ion-buttons slot="end" *ngIf="bulletinEditor && opt.value && opt.value.length > 0">
+        <ion-button (click)="toggleHide()" fill="clear" size="small" class="hide-button">
+          <ion-icon *ngIf="!hidden" name="eye-off" slot="end"></ion-icon>
+          <ion-icon *ngIf="hidden" name="eye" slot="end"></ion-icon>
+          <ion-label *ngIf="hidden">Show</ion-label>
+          <ion-label *ngIf="!hidden">Hide</ion-label>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-card-header>
+  <!-- shared headers -->
+  <!--<ion-row>
+    <ion-col>
+      <ion-card-header *ngIf="options && !omitLabel" size="4">
+        <ion-card-title>{{ label }}</ion-card-title>
+      </ion-card-header>
+    </ion-col>
+    <ion-col *ngIf="options && options.length <= 2" size="4">
+      <ion-segment [(ngModel)]="opt.selected" (ionChange)="selectedChange()" color="primary">
+        <ion-segment-button *ngFor="let option of options; let ii = index" [value]="ii">
+          <ion-label class="selectable">{{ option.label }}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-col>
+    <ion-col *ngIf="options && options.length > 2" size="4">
+      <ion-select [(ngModel)]="opt.selected" (ionChange)="selectedChange()">
+        <ion-select-option *ngFor="let option of options; let ii = index" [value]="ii">
+          <ion-label>{{ option.label }}</ion-label>
+        </ion-select-option>
+      </ion-select>
+    </ion-col>
+    <ion-col class="ion-align-items-right" *ngIf="opt.value && opt.value[opt.selected] && opt.value[opt.selected].canticle">
+      <ion-buttons class="ion-float-right">
+        <ion-button (click)="canticleMenu()">
+          <ion-icon name="swap" slot="start"></ion-icon>
+          <ion-label i18n>Change Canticle</ion-label>
+        </ion-button>
+      </ion-buttons>
+      <ion-select #canticleSelect (ionChange)="addOption($event)" class="display-hidden">
+        <ion-select-option *ngFor="let co of canticleOptions" [value]="co.id">{{ co.number }}. {{ co.localname }} <ng-container *ngIf="co.version && co.version !== 'bcp1979'">({{ co.version_label }})</ng-container></ion-select-option>
+      </ion-select>
+    </ion-col>
+    <ion-col class="ion-align-items-right"  size="2">
+    <ion-col class="ion-align-items-right" *ngIf="bulletinEditor" size="2">
+      <ion-button (click)="toggleHide()" fill="clear" size="small">
+        <ion-icon *ngIf="!hidden" name="eye-off" slot="start"></ion-icon>
+        <ion-icon *ngIf="hidden" name="eye" slot="start"></ion-icon>
+        <ion-label *ngIf="hidden" class="display-hidden">Show</ion-label>
+        <ion-label *ngIf="!hidden" class="display-hidden">Hide</ion-label>
+      </ion-button>
+    </ion-col>
+  </ion-row>-->
+
+  <ion-card-title *ngIf="hasLabel && !omitLabel && !options">{{ label }}</ion-card-title>
+
+
+  <!-- renderers -->
+  <div *ngFor="let obj of opt.value; let ii = index">
+    <venite-pray-object *ngIf="opt.selected == ii" [obj]="obj" (objChange)="updateObj(ii, $event)" [bulletinEditor]="bulletinEditor"></venite-pray-object>
+  </div>
+</ion-card>

@@ -1,0 +1,46 @@
+.border {
+  border: 0 !important;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0.25em;
+  padding-bottom: 4em;
+}
+
+.header, h3, h2, h1 {
+  text-align: center;
+  font-family: "EB Garamond", serif;
+}
+
+ion-card-title, h1 {
+  font-size: 2em;
+  font-weight: bold;
+  font-variant: small-caps;
+}
+
+ion-card-subtitle, h2 {
+  font-size: 1em;
+  font-weight: normal;
+}
+
+h3 {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+img.icon {
+  display: block;
+  margin: 1em auto;
+  width: 200px;
+}
+
+.prayer-body {
+  background-color: var(--venite-background-color);
+  border-radius: 4px;
+  max-width: calc(100vw - 0.5em) !important;
+}
+
+@media (min-width: 767px) {
+  .prayer-body {
+    max-width: 620px !important;
+  }
+}

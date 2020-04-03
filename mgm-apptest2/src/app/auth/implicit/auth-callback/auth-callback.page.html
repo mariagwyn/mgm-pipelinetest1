@@ -1,0 +1,4 @@
+<venite-loading *ngIf="!error" message="login"></venite-loading>
+<ion-content *ngIf="error">
+  <venite-error *ngIf="error" [text]="errorText" page="AuthCallbackPage"></venite-error>
+</ion-content>

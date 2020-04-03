@@ -1,0 +1,22 @@
+<ion-content class="ion-padding ion-align-items-center ion-text-center">
+  <ion-label i18n>Your bulletin is now available at</ion-label>
+  <ion-textarea [value]="link" id="copyLink" contenteditable="true"></ion-textarea>
+  <ion-button (click)="copyLink()">
+    <ion-icon name="link" slot="start"></ion-icon>
+    <ion-label i18n>Copy Link to Clipboard</ion-label>
+  </ion-button>
+  <ng-container *ngIf="success">
+    <div class="message">
+      <ion-label color="success">
+        <ion-icon name="checkmark"></ion-icon> Copied!
+      </ion-label>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="error">
+    <div class="message">
+      <ion-label color="danger" i18n>
+        <ion-icon name="alert"></ion-icon> Try copying and pasting the URL manually.
+      </ion-label>
+    </div>
+  </ng-container>
+</ion-content>

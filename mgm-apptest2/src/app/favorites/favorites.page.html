@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title i18n routerLink="/">Favorites</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-toolbar>
+    <ion-searchbar *ngIf="objects && objects.length > 0" (ionChange)="filter($event)" slot="start" [value]="search"></ion-searchbar>
+    <ion-button slot="end" (click)="loadData()" size="small">
+      <ion-icon name="refresh" slot="icon-only"></ion-icon>
+      <ion-label class="display-hidden" i18n>Refresh</ion-label>
+    </ion-button>
+  </ion-toolbar>
+  <ion-list>
+    <div *ngIf="objects && objects.length == 0" class="tutorial" i18n>
+      <h1>Looks like you haven’t <span class="like">liked</span> any verses.</h1>
+      <p><a routerLink='/'>Pray</a> one of the Offices. Select a verse you liked. Click the <ion-icon name="heart" aria-label="heart" class="like"></ion-icon> and add some notes to remind yourself why you loved it.</p>
+      <p>Then come back to this page and remind yourself of all the ways God has spoken to you over the years!</p>
+    </div>
+    <ng-container *ngIf="objects && objects.length > 0">
+      <ng-container *ngFor="let container of objects">
+        <ion-item *ngIf="!container.hide" [routerLink]="container.obj.id">
+          <ion-label>
+            <h2 *ngIf="container.obj.citation">{{ container.obj.citation}}</h2>
+            <h3>{{ container.obj.dateAdded | date:'shortDate' }}</h3>
+            <p>{{ container.obj.text }}</p>
+            <p class="note">{{ container.obj.note }}</p>
+            <p i18n *ngIf="container.obj.tags && container.obj.tags.length > 0">Tags:
+              <ng-container *ngFor="let tag of container.obj.tags; let index = index">
+                <a (click)="setSearch(tag)" class="tag">{{tag}}</a>
+                <span *ngIf="index < container.obj.tags.length - 1"> | </span>
+              </ng-container>
+            </p>
+          </ion-label>
+        </ion-item>
+      </ng-container>
+    </ng-container>
+  </ion-list>
+</ion-content>

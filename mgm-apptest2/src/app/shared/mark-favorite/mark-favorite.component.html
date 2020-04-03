@@ -1,0 +1,11 @@
+<ng-container *ngIf="!isAuth">
+  <ion-button *ngIf="!isAuth" (click)="signIn()" color="primary" i18n>
+    Log in to <ion-icon name="heart-empty" slot="end"></ion-icon><ion-label class="display-hidden">Like</ion-label>
+  </ion-button>
+</ng-container>
+<ng-container *ngIf="isAuth">
+  <ion-button (click)="toggleFavorite(selection)" tappable>
+    <ion-icon [@heart]="favoriteMarked ? 'liked' : 'unliked'" [name]="favoriteMarked ? 'heart' : 'heart-empty'"></ion-icon>
+    <ion-label class="display-hidden">Mark as Favorite</ion-label>
+  </ion-button>
+</ng-container>

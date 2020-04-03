@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title i18n routerLink="/">Meditate</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="setter" *ngIf="!seconds">
+    <ion-item >
+      <ion-button (click)="setSecondsAndStart(meditateMinutes * 60, 0)" slot="start">
+        <ion-icon name="sunny" slot="start"></ion-icon>
+        <ion-label i18n>Meditate for</ion-label>
+      </ion-button>
+      <ion-input [(ngModel)]="meditateMinutes" type="number"></ion-input>
+      <ion-label position="fixed" i18n>minutes</ion-label>
+    </ion-item>
+  </div>
+  <div class="circle" *ngIf="color">
+    <svg width="300" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+       <g transform="translate(110,110)">
+          <circle r="100" class="e-c-base" [style.stroke]="color"/>
+          <g transform="rotate(-90)">
+             <circle r="100" class="e-c-progress" [style.stroke-dashoffset]="offset" [style.stroke-dasharray]="length"/>
+             <g id="e-pointer" [style.transform]="'rotate(-'+pointerDegrees+'deg)'">
+                <circle cx="100" cy="0" r="8" class="e-c-pointer" [style.stroke]="color"/>
+             </g>
+          </g>
+       </g>
+    </svg>
+    <div class="controls">
+      <div>
+        <ion-text [style.color]="color" *ngIf="seconds">
+          <h2>{{ secondsRemaining | minutesSeconds }}</h2>
+        </ion-text>
+        <ion-text [style.color]="color" *ngIf="!seconds">
+          <h2>{{ 0 | minutesSeconds }}</h2>
+        </ion-text>
+      </div>
+      <div>
+        <ion-button (click)="pause()" *ngIf="!paused" fill="clear" [style.color]="color" size="large">
+          <ion-icon name="pause"></ion-icon>
+        </ion-button>
+        <ion-button (click)="resume()" *ngIf="paused" fill="clear" [style.color]="color" size="large">
+          <ion-icon name="play"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+  <div class="end">
+    <ion-button (click)="dismiss()" fill="clear" [style.color]="color" size="large">
+      <ion-label>Finish</ion-label>
+    </ion-button>
+  </div>
+</ion-content>

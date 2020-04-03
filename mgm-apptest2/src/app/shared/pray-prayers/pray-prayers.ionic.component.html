@@ -1,0 +1,16 @@
+<ion-segment [(ngModel)]="category">
+  <ion-segment-button *ngFor="let category of value; let categoryIndex = index" [value]="categoryIndex" >
+    <ion-label>{{ value[categoryIndex].label }}</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+<ion-list *ngFor="let section of value[category].value">
+  <ion-list-header>
+    <ion-label>{{ section.label }}</ion-label>
+  </ion-list-header>
+  <ion-item *ngFor="let prayer of section.value" (click)="toggle(prayer)">
+    <h4>{{ prayer.number }} {{ prayer.label }}</h4>
+    <p [hidden]="prayer.show" [innerHTML]="prayer.text | replaceabletext | truncate:[50, '...']"></p>
+    <p [hidden]="!prayer.show"><span [innerHTML]="prayer.text | replaceabletext"></span><span class="response"> Amen.</span></p>
+  </ion-item>
+</ion-list>

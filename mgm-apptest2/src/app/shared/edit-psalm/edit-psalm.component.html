@@ -1,0 +1,189 @@
+<ion-content>
+  <ion-card *ngIf="psalm">
+    <ion-card-header>
+      <ion-card-title *ngIf="psalm.slug">{{ psalm.slug }}</ion-card-title>
+      <ion-card-title *ngIf="!psalm.slug" i18n>New Psalm</ion-card-title>
+      <ion-card-subtitle *ngIf="psalm.language && psalm.version">{{ psalm.language }} | {{ psalm.version }} <span *ngIf="psalm.id">| #{{ psalm.id }}</span></ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row>
+        <ion-col class="ion-text-right">
+          <ion-button size="small" fill="outline" (click)="emit(psalm, citation)">
+            <fa-icon [icon]="faLanguage" *ngIf="!psalm.translating"></fa-icon>
+            <ion-spinner *ngIf="psalm.translating"></ion-spinner>
+          </ion-button>
+          <ion-button size="small" fill="outline" (click)="save(psalm)">
+            <ion-icon name="save" *ngIf="!saving"></ion-icon>
+            <ion-spinner *ngIf="saving"></ion-spinner>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+        <ion-item>
+          <ion-label position="stacked" i18n>Slug</ion-label>
+          <ion-input [(ngModel)]="psalm.slug"></ion-input>
+        </ion-item>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label position="stacked" i18n>Language</ion-label>
+              <ion-input [(ngModel)]="psalm.language"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-label position="stacked" i18n>Version</ion-label>
+              <ion-input [(ngModel)]="psalm.version"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-item>
+          <ion-label position="stacked" i18n>Number</ion-label>
+          <ion-input [(ngModel)]="psalm.number"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Label</ion-label>
+          <ion-input [(ngModel)]="psalm.label"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Version Label</ion-label>
+          <ion-input [(ngModel)]="psalm.version_label"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label i18n>Canticle</ion-label>
+          <ion-checkbox [(ngModel)]="psalm.canticle"></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label i18n>Invitatory</ion-label>
+          <ion-checkbox [(ngModel)]="psalm.invitatory"></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Local Name</ion-label>
+          <ion-input [(ngModel)]="psalm.localname"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Latin Name</ion-label>
+          <ion-input [(ngModel)]="psalm.latinname"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Citation</ion-label>
+          <ion-input [(ngModel)]="psalm.citation"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Antiphon</ion-label>
+          <pre>{{ psalm.antiphon | json }}</pre>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Omit Antiphon</ion-label>
+          <ion-checkbox [(ngModel)]="psalm.omit_antiphon"></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Omit Gloria</ion-label>
+          <ion-checkbox [(ngModel)]="psalm.omit_gloria"></ion-checkbox>
+        </ion-item>
+        <ion-card-subtitle i18n>Value</ion-card-subtitle>
+          <!-- Different value editors for different psalm types -->
+          <ion-button *ngIf="psalm.value?.length == 0" fill="outline" (click)="appendAfter(-1, psalm.value, [])" size="small">
+            <ion-icon name="add-circle-outline"></ion-icon>
+            <ion-label i18n>Add Section</ion-label>
+          </ion-button>
+          <ng-container *ngIf="!psalmWithSections(psalm)">
+            <ng-container *ngFor="let section of psalm.value; let sectionIndex = index">
+              <ion-button fill="outline" (click)="appendAfter(sectionIndex, psalm.value, ['', '', ''])" size="small">
+                <ion-icon name="add-circle-outline"></ion-icon>
+                <ion-label i18n>Add Section</ion-label>
+              </ion-button>
+              <ion-button fill="outline" (click)="appendAfter(-1, section, ['', '', ''])" size="small">
+                <ion-icon name="add-circle-outline"></ion-icon>
+                <ion-label i18n>Add verse</ion-label>
+              </ion-button>
+              <ion-item *ngFor="let verse of section; let verseIndex = index">
+                <ng-container *ngIf="verse.length == 3">
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="1"><ion-textarea autoGrow [(ngModel)]="verse[0]"></ion-textarea></ion-col>
+                      <ion-col size="9">
+                        <ion-textarea autoGrow [(ngModel)]="verse[1]"></ion-textarea>
+                      </ion-col>
+                      <ion-col size="2">
+                        <ion-button fill="outline" (click)="appendAfter(verseIndex, section, ['', '', ''])" size="small">
+                          <ion-icon name="add-circle-outline"></ion-icon>
+                        </ion-button>
+                        <ion-button fill="outline" (click)="remove(verseIndex, section)" size="small">
+                          <ion-icon name="trash"></ion-icon>
+                        </ion-button>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col size="1">
+                      </ion-col>
+                      <ion-col size="11">
+                        <ion-textarea autoGrow [(ngModel)]="verse[2]"></ion-textarea>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ng-container>
+                <ng-container *ngIf="verse.length == 2">
+                  <ion-textarea autoGrow [(ngModel)]="verse[0]"></ion-textarea>
+                  <ion-textarea autoGrow [(ngModel)]="verse[1]"></ion-textarea>
+                  <ion-buttons slot="end">
+                    <ion-button fill="outline" (click)="appendAfter(verseIndex, section, ['', ''])" size="small">
+                      <ion-icon name="add-circle-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button fill="outline" (click)="remove(verseIndex, section)" size="small">
+                      <ion-icon name="trash"></ion-icon>
+                    </ion-button>
+                  </ion-buttons>
+                </ng-container>
+                <ng-container *ngIf="verse.length == 1">
+                  <ion-textarea autoGrow [(ngModel)]="verse[0]"></ion-textarea>
+                </ng-container>
+              </ion-item>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="psalmWithSections(psalm)">
+            <ng-container *ngFor="let section of psalm.value; let sectionIndex = index">
+              <ion-card-subtitle i18n>Section {{ sectionIndex }}</ion-card-subtitle>
+              <ion-item>
+                <ion-label position="stacked" i18n>Label</ion-label>
+                <ion-textarea autoGrow [(ngModel)]="section.label"></ion-textarea>
+                <ion-buttons slot="end">
+                  <ion-button fill="outline" (click)="appendAfter(sectionIndex, psalm.value, {label: '', verses: []})" size="small">
+                    <ion-icon name="add-circle-outline"></ion-icon>
+                  </ion-button>
+                  <ion-button fill="outline" (click)="remove(sectionIndex, psalm.value)" size="small">
+                    <ion-icon name="trash"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-item>
+              <ng-container *ngFor="let verse of section.verses; let verseIndex = index">
+                <ion-item>
+                  <ion-input [(ngModel)]="verse[0]"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-input [(ngModel)]="verse[1]"></ion-input>
+                  <ion-buttons slot="end">
+                    <ion-button fill="outline" (click)="appendAfter(verseIndex, section.verses, ['', ''])" size="small">
+                      <ion-icon name="add-circle-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button fill="outline" (click)="remove(verseIndex, section.verses)" size="small">
+                      <ion-icon name="trash"></ion-icon>
+                    </ion-button>
+                  </ion-buttons>
+                </ion-item>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        <ion-row>
+          <ion-col class="ion-text-right">
+            <ion-button size="small" fill="outline" (click)="emit(psalm, citation)">
+              <fa-icon [icon]="faLanguage"></fa-icon>
+            </ion-button>
+            <ion-button size="small" fill="outline" (click)="save(psalm)">
+              <ion-icon name="save" *ngIf="!saving"></ion-icon>
+              <ion-spinner *ngIf="saving"></ion-spinner>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+  </ion-card>
+</ion-content>

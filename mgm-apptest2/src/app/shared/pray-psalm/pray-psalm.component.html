@@ -1,0 +1,83 @@
+<ion-toolbar *ngIf="bulletinEditor && isPsalm">
+  <ion-buttons *ngIf="!changingCitation" slot="end">
+    <ion-button (click)="citationMenu()">
+      <ion-icon name="swap" slot="start"></ion-icon>
+      <ion-label i18n>Change Verses</ion-label>
+    </ion-button>
+  </ion-buttons>
+  <ion-buttons *ngIf="changingCitation" slot="end">
+    <ion-input [(ngModel)]="citation" name="citation"></ion-input>
+    <ion-button (click)="changeCitation()" fill="clear">
+      <ion-icon name="checkmark" slot="icon-only"></ion-icon>
+      <ion-label i18n class="display-hidden">Change</ion-label>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<h4>
+  <span *ngIf="canticle && number">{{ number }}. </span>{{ english }}
+  <span *ngIf="latin" class="latin canticle-citation">{{ latin }}</span>
+</h4>
+<p *ngIf="citation && citation !== slug" class="canticle-citation">{{ citation }}</p>
+
+<p *ngIf="includeAntiphon" class="antiphon">{{ antiphon }}</p>
+<div class="psalm-set" *ngFor="let set of filteredValue; let setIndex = index">
+  <h5 *ngIf="set.label" class="section-label">{{ set.label }}</h5>
+
+  <p class="psalm" *ngFor="let verse of (set.verses || set); let verseIndex = index">
+    <!-- psalms have the verse number as first item in array of verse -->
+    <span *ngIf="verse.length == 3" class="numbered">
+      <span class="numbered-wrapper">
+        <sup class="number" *ngIf="!(setIndex == 0 && verseIndex == 0)">{{ verse[0] }}</sup>
+        <span class="verse"
+          venite-selectable
+          [citation]="{book: 'Ps', chapter: number, verse: verse[0]}"
+          [attr.id]="'psalm-'+number+'-'+verse[0]"
+          *ngIf="setIndex == 0 && verseIndex == 0" [innerHTML]="verse[1] | typography:false:verseIndex | newlines"></span>
+        <span class="verse"
+          venite-selectable
+          [citation]="{book: 'Ps', chapter: number, verse: verse[0]}"
+          [attr.id]="'psalm-'+number+'-'+verse[0]"
+          *ngIf="!(setIndex == 0 && verseIndex == 0)" [innerHTML]="verse[1] | lord | newlines"></span><br>
+      </span>
+      <div class="halfverse-wrapper">
+        <span class="halfverse"
+          venite-selectable
+          [citation]="{book: 'Ps', chapter: number, verse: verse[0]}"
+          [attr.id]="'psalm-'+number+'-'+verse[0]+'-b'"
+          [innerHTML]="verse[2] | lord | newlines"></span>
+      </div>
+    </span>
+    <!-- canticles etc. with no verse numbers listed -->
+    <span *ngIf="verse.length == 2">
+      <span class="verse"
+        venite-selectable
+        [citation]="{label: english || latin}"
+        [attr.id]="slug+'-'+verseIndex"
+        *ngIf="setIndex == 0 && verseIndex == 0" [innerHTML]="verse[0] | typography:false:verseIndex | newlines"></span>
+      <span class="verse"
+        venite-selectable
+        [citation]="{label: english || latin}"
+        [attr.id]="slug+'-'+verseIndex"
+        *ngIf="!(setIndex == 0 && verseIndex == 0)"  [innerHTML]="verse[0] | lord | newlines"></span><br>
+      <span class="halfverse"
+        venite-selectable
+        [citation]="{label: english || latin}"
+        [attr.id]="slug+'-'+verseIndex+'-b'"
+        [innerHTML]="verse[1] | lord | newlines"></span>
+    </span>
+    <!-- Te Deum or other canticles formatted as if text -->
+    <span *ngIf="verse.length == 1">
+      <span class="pre"
+        venite-selectable
+        [citation]="{label: english || latin}"
+        [attr.id]="slug+'-'+verseIndex"
+        [innerHTML]="verse[0] | typography:false:(verseIndex+setIndex)"></span>
+    </span>
+  </p>
+  <p *ngIf="includeAntiphon && !(!(canticle || invitatory) || omit_gloria && setIndex == (filteredValue.length - 1))" class="antiphon selectable repeat-antiphon">{{ antiphon }}</p>
+</div>
+<ng-container *ngIf="(canticle || invitatory) && !omit_gloria">
+  <br>
+  <venite-pray-gloria [value]="gloriaValue"></venite-pray-gloria>
+</ng-container>
+<p *ngIf="includeAntiphon" class="antiphon selectable">{{ antiphon }}</p>

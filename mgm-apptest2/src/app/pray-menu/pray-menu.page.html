@@ -1,0 +1,150 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title i18n>Pray</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <venite-error *ngIf="error" page="PrayMenuPage" [text]="error"></venite-error>
+  <ion-grid fixed>
+    <form *ngIf="menu" name="menuForm">
+      <ion-list>
+        <ion-item *ngIf="menuLangs.length > 1">
+          <ion-label position="stacked" i18n>Language</ion-label>
+          <ion-select name="language" [value]="data.language" (ionChange)="setLanguage($event)">
+            <ion-select-option *ngFor="let lang of menuLangs" [value]="lang">{{ languagelocalname(lang) }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item *ngIf="menuVers.length > 1">
+          <ion-label position="stacked" i18n>Version</ion-label>
+          <ion-select name="version" [value]="data.version" (ionChange)="setVersion($event)">
+            <ion-select-option *ngFor="let v of menuVers" [value]="v">{{ versionName(v) }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Month</ion-label>
+          <ion-select name="m" [(ngModel)]="data.m">
+            <ion-select-option value="1" i18n>January</ion-select-option>
+            <ion-select-option value="2" i18n>February</ion-select-option>
+            <ion-select-option value="3" i18n>March</ion-select-option>
+            <ion-select-option value="4" i18n>April</ion-select-option>
+            <ion-select-option value="5" i18n>May</ion-select-option>
+            <ion-select-option value="6" i18n>June</ion-select-option>
+            <ion-select-option value="7" i18n>July</ion-select-option>
+            <ion-select-option value="8" i18n>August</ion-select-option>
+            <ion-select-option value="9" i18n>September</ion-select-option>
+            <ion-select-option value="10" i18n>October</ion-select-option>
+            <ion-select-option value="11" i18n>November</ion-select-option>
+            <ion-select-option value="12" i18n>December</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Day</ion-label>
+          <ion-select name="d" [(ngModel)]="data.d" (ionChange)="dayChanged()">
+            <ion-select-option *ngFor="let d of daysInMonth(data.y, data.m)" [value]="d.toString()">{{ d }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Year</ion-label>
+          <ion-input type="number" name="y" [(ngModel)]="data.y"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="!(menuLits.length > 0)">
+          <ion-label position="stacked">
+            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+          </ion-label>
+          <ion-skeleton-text animated style="width: 20%"></ion-skeleton-text>
+        </ion-item>
+        <ion-item *ngIf="menuLits.length > 0">
+          <ion-label position="stacked" i18n>Liturgy</ion-label>
+          <ion-select name="liturgy" [ngModel]="data.liturgy" (ngModelChange)="changeLiturgy($event)">
+            <ng-container *ngFor="let opt of menuLits">
+              <ion-select-option *ngIf="!opt.special_day || dateSpecialDay" [value]="opt.slug">{{ opt.name }}</ion-select-option>
+            </ng-container>
+          </ion-select>
+        </ion-item>
+        <ion-item *ngIf="dateIsSaturday">
+          <ion-label i18n>Vigil of Sunday</ion-label>
+          <ion-checkbox name="isVigil" [(ngModel)]="data.isVigil" (ionChange)="dayChanged()"></ion-checkbox>
+        </ion-item>
+        <ng-container *ngIf="dateSpecialDay">
+          <ion-item *ngIf="dateSpecialDay == 'sunday-holy-week'">
+            <ion-label i18n>Liturgy of the Palms</ion-label>
+            <ion-toggle (ionChange)="setSpecialDay($event)"></ion-toggle>
+          </ion-item>
+          <ion-item *ngIf="dateSpecialDay == 'thursday-holy-week'">
+            <ion-label i18n>Footwashing</ion-label>
+            <ion-toggle (ionChange)="setSpecialDay($event)"></ion-toggle>
+          </ion-item>
+          <ion-item *ngIf="dateSpecialDay == 'friday-holy-week'">
+            <ion-label i18n>Proper Liturgy for Good Friday</ion-label>
+            <ion-toggle (ionChange)="setSpecialDay($event)"></ion-toggle>
+          </ion-item>
+          <ion-item *ngIf="dateSpecialDay == 'saturday-holy-week'">
+            <ion-label i18n>Liturgy of the Word for Holy Saturday</ion-label>
+            <ion-toggle (ionChange)="setSpecialDay($event)"></ion-toggle>
+          </ion-item>
+          <ion-item *ngIf="dateSpecialDay == 'saturday-holy-week' || dateSpecialDay == 'sunday-easter'">
+            <ion-label i18n>The Great Vigil of Easter</ion-label>
+            <ion-toggle (ionChange)="setSpecialDay($event, true)"></ion-toggle>
+          </ion-item>
+          <ion-item *ngIf="dateSpecialDay == 'wednesday-last-epiphany'">
+            <ion-label i18n>Proper Liturgy for Ash Wednesday</ion-label>
+            <ion-toggle (ionChange)="setSpecialDay($event)"></ion-toggle>
+          </ion-item>
+        </ng-container>
+      </ion-list>
+      <ion-row class="ion-justify-content-center">
+        <ion-button type="submit" (click)="pray('pray', data)">Pray</ion-button>
+        <ion-button (click)="pray('bulletin', data)" fill="outline">Create Bulletin <span class="beta"><sup>(beta)</sup></span></ion-button>
+      </ion-row>
+
+      <!-- Supplemental Devotions -->
+      <ng-container *ngIf="hasSupplements">
+        <ion-list>
+          <ion-item><h4 i18n>Supplemental Devotions</h4></ion-item>
+          <ng-container *ngFor="let item of versPrefs | keyvalue">
+            <ion-item *ngIf="item.value.options.length > 1 && item.value.supplement">
+              <ion-label position="stacked">{{ item.value.label }}</ion-label>
+              <ion-select [name]="item.key" [(ngModel)]="data.preferences[item.key]">
+                <ion-select-option *ngFor="let opt of item.value.options; let ii = index"
+                  [value]="opt.value">
+                  {{ opt.label }}
+                </ion-select-option>
+              </ion-select>
+              <ion-text class="preference-description" *ngIf="item.value.description" [innerHTML]="item.value.description"></ion-text>
+            </ion-item>
+          </ng-container>
+        </ion-list>
+      </ng-container>
+
+      <!-- Preferences -->
+      <ng-container *ngIf="hasPreferences">
+        <ion-list>
+          <ion-item><h4 i18n>Preferences</h4></ion-item>
+          <ng-container *ngFor="let item of versPrefs | keyvalue">
+            <ion-item *ngIf="item.value.options.length > 1 && !item.value.supplement">
+              <ion-label position="stacked">{{ item.value.label }}</ion-label>
+              <ion-select [name]="item.key" [(ngModel)]="data.preferences[item.key]">
+                <ion-select-option *ngFor="let opt of item.value.options; let ii = index"
+                  [value]="opt.value">
+                  {{ opt.label }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-text class="preference-description" *ngIf="item.value.description" [innerHTML]="item.value.description"></ion-text>
+          </ng-container>
+        </ion-list>
+        <ion-row class="ion-justify-content-center">
+          <ion-button *ngIf="!isAuth" (click)="signIn()" color="primary" i18n>Log in to Save Preferences</ion-button>
+        </ion-row>
+        <ion-row class="ion-justify-content-center">
+          <ion-label *ngIf="isAuth" class="helper" i18n>Preferences will be saved when you click &ldquo;Pray.&rdquo;</ion-label>
+          <ion-label *ngIf="!isAuth" class="helper" i18n>Preferences will be saved to this device when you click &ldquo;Pray.&rdquo; If you log in, they’ll be saved across all your devices.</ion-label>
+        </ion-row>
+      </ng-container>
+    </form>
+  </ion-grid>
+</ion-content>

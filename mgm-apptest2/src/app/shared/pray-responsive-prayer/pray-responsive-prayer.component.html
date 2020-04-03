@@ -1,0 +1,42 @@
+<ng-container *ngIf="isPreces">
+  <table class="preces">
+    <tr *ngFor="let line of value; let index = index">
+      <td
+        venite-selectable
+        [citation]="label ? { label: label } : undefined"
+        [attr.id]="uid+'-'+index+'-label'">{{ line.label }}</td>
+      <td
+        venite-selectable
+        [citation]="label ? { label: label } : undefined"
+        [attr.id]="uid+'-'+index+'-text'"
+        [class]="index % 2 == 0 ? '' : 'response'">{{ line.text}}</td>
+    </tr>
+  </table>
+</ng-container>
+
+<ng-container *ngIf="isLitany">
+  <p *ngFor="let line of value; let lineIndex = index" [class]='(line.length == 3 && line[2] == "optional") || (response && line.length == 2 && line[1] == "optional") ? "optional litany" : "litany"'>
+    <span
+      venite-selectable
+      [citation]="label ? { label: label } : undefined"
+      [attr.id]="uid+'-'+lineIndex+'-0'"
+      [innerHTML]="line[0] | newlines"></span><br>
+    <span
+      venite-selectable
+      [citation]="label ? { label: label } : undefined"
+      [attr.id]="uid+'-'+lineIndex+'-response'"
+      *ngIf="response && response !== '[Silence]'" class="response"
+      [innerHTML]="response | newlines"></span>
+    <span
+      venite-selectable
+      [citation]="label ? { label: label } : undefined"
+      [attr.id]="uid+'-'+lineIndex+'-1'"
+      *ngIf="!response && line[1] !== '[Silence]'" class="response"
+      [innerHTML]="line[1] | newlines"></span>
+    <span
+      venite-selectable
+      [citation]="label ? { label: label } : undefined"
+      [attr.id]="uid+'-'+lineIndex+'-1'"
+      *ngIf="(response && response == '[Silence]') || line[1] == '[Silence]'" class="rubric"><br>Silence</span>
+  </p>
+</ng-container>

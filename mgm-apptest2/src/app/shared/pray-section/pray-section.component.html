@@ -1,0 +1,17 @@
+<div class="section-header" >
+  <div class="label book-text"><h2 *ngIf="label">{{ label }}</h2></div>
+  <div *ngIf="toggle" class="buttons">
+    <button type="button" (click)="toggleSection()" class="toggle" *ngIf="show">Hide</button>
+    <button type="button" (click)="toggleSection()" class="toggle" *ngIf="!show">Show</button>
+  </div>
+</div>
+
+<div class="content" *ngIf="!(show==false)">
+  <venite-pray-option *ngFor="let opt of value; let ii = index"
+    [opt]="opt"
+    (optChange)="optChanged(ii, $event)"
+    [language]="language"
+    [liturgyversions]="liturgyversions"
+    [hidden]="opt.hidden"
+    [bulletinEditor]="bulletinEditor"></venite-pray-option>
+</div>

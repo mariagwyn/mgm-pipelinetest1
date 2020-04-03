@@ -1,0 +1,130 @@
+<ion-card *ngIf="liturgy">
+  <ion-card-header>
+    <ion-card-title *ngIf="liturgy.slug">{{ liturgy.slug }}</ion-card-title>
+    <ion-card-title *ngIf="!liturgy.slug" i18n>New Liturgy</ion-card-title>
+    <ion-card-subtitle *ngIf="liturgy.language && liturgy.version">{{ liturgy.language }} | {{ liturgy.version }} <span *ngIf="liturgy.id">| #{{ liturgy.id }}</span></ion-card-subtitle>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-row>
+      <ion-col class="ion-text-right">
+        <ion-button size="small" fill="outline" (click)="save(liturgy)">
+          <ion-icon name="save" *ngIf="!saving"></ion-icon>
+          <ion-spinner *ngIf="saving"></ion-spinner>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-item>
+      <ion-label position="stacked" i18n>Slug</ion-label>
+      <ion-input [(ngModel)]="liturgy.slug"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked" i18n>Name</ion-label>
+      <ion-input [(ngModel)]="liturgy.name"></ion-input>
+    </ion-item>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked" i18n>Language</ion-label>
+          <ion-input [(ngModel)]="liturgy.language"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked" i18n>Version</ion-label>
+          <ion-input [(ngModel)]="liturgy.version"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked" i18n>Source</ion-label>
+          <ion-input [(ngModel)]="liturgy.source"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked" i18n>Evening</ion-label>
+          <ion-checkbox [(ngModel)]="liturgy.evening"></ion-checkbox>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked" i18n>Supplement</ion-label>
+          <ion-checkbox [(ngModel)]="liturgy.supplement"></ion-checkbox>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-item>
+      <ion-label position="stacked" i18n>Liturgy Versions</ion-label>
+      <ng-container *ngFor="let version of liturgy.liturgyversions; let index = index; trackBy: trackByIndex">
+        <ion-input [(ngModel)]="liturgy.liturgyversions[index]"></ion-input>
+      </ng-container>
+      <ion-button (click)="addLiturgyVersion(liturgy.liturgyversions)" slot="end">
+        <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <h3 i18n>Preferences</h3>
+    <ion-item>
+      <ion-label position="stacked" i18n>Preferences</ion-label>
+      <ion-label position="stacked" color="danger" *ngIf="preferencesError">{{ preferencesError }}</ion-label>
+      <ion-textarea [value]="liturgy.preferences | json" (ionChange)="setPreferences($event)" autoGrow debounce="5000"></ion-textarea>
+    </ion-item>
+    <!--<ion-item>
+      <ion-button (click)="addPreference()" slot="end">
+        <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-card *ngFor="let pref of prefsMap; let prefIndex = index">
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="stacked" i18n>Key</ion-label>
+            <ion-input [(ngModel)]="pref.key"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label position="stacked" i18n>Label</ion-label>
+            <ion-input [(ngModel)]="pref.preference.label"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngFor="let option of pref.preference.options">
+        <ion-col>
+          <ion-item>
+            <ion-label position="stacked" i18n>Default</ion-label>
+            <ion-checkbox [(ngModel)]="option.default"></ion-checkbox>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label position="stacked" i18n>Value</ion-label>
+            <ion-input [(ngModel)]="option.value"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label position="stacked" i18n>Label</ion-label>
+            <ion-input [(ngModel)]="option.label"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label position="stacked" i18n>whenType</ion-label>
+            <ion-select [(ngModel)]="option.whentype">
+              <ion-select-option value="year" i18n>Liturgical Day</ion-select-option>
+              <ion-select-option value="date" i18n>Day of Month</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-card>-->
+    <h3 i18n>Liturgy</h3>
+    <ion-item>
+      <ion-label position="stacked" i18n>Value</ion-label>
+      <ion-label position="stacked" color="danger" *ngIf="valueError">{{ valueError }}</ion-label>
+      <ion-textarea [value]="liturgy.value | json" (ionChange)="setValue($event)" autoGrow debounce="5000"></ion-textarea>
+    </ion-item>
+  </ion-card-content>
+</ion-card>

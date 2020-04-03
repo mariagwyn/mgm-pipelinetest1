@@ -1,0 +1,170 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title i18n>Settings</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="savePreferences()">
+        <ion-icon name="save" slot="icon-only"></ion-icon>
+        <ion-label class="display-hidden">Save</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-segment [(ngModel)]="display">
+    <ion-segment-button value="liturgy" i18n>Liturgy Preferences</ion-segment-button>
+    <ion-segment-button value="display" i18n>Display Settings</ion-segment-button>
+  </ion-segment>
+  <ng-container *ngIf="display == 'display'">
+    <ion-card>
+      <ion-card-header><ion-card-title i18n>Display Settings</ion-card-title></ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked" i18n>Display Mode</ion-label>
+          <ion-segment [(ngModel)]="prefs.displaySettings.displayMode">
+            <ion-segment-button value="auto" i18n>Auto</ion-segment-button>
+            <ion-segment-button value="light" i18n>Light</ion-segment-button>
+            <ion-segment-button value="dark" class="dark" i18n>Dark</ion-segment-button>
+          </ion-segment>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Voice</ion-label>
+          <ion-select [(ngModel)]="prefs.displaySettings.voiceChoice">
+            <ion-select-option *ngFor="let voice of voicesWithNationalities" [value]="voice.voice.name">{{ voice.voice.name }} ({{ voice.nationality }})</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Background Sounds <em>(App/Desktop only)</em></ion-label>
+          <ion-select [(ngModel)]="prefs.displaySettings.voiceBackground">
+            <ion-select-option value="silence">None</ion-select-option>
+            <ion-select-option value="seashore">Seashore</ion-select-option>
+            <ion-select-option value="garden">Garden</ion-select-option>
+            <ion-select-option value="night">Night</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Background Volume</ion-label>
+          <ion-range min="0" max="1" step="0.1" snaps="true" ticks="false" [(ngModel)]="prefs.displaySettings.voiceBackgroundVolume">
+            <ion-label slot="start">
+              <ion-icon name="volume-mute" slot="icon-only"></ion-icon>
+              <span class="display-hidden">Low</span>
+            </ion-label>
+            <ion-label slot="end">
+              <ion-icon name="volume-high" slot="icon-only"></ion-icon>
+              <span class="display-hidden">High</span>
+            </ion-label>
+          </ion-range>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Speed</ion-label>
+          <ion-range min="0.5" max="1.5" step="0.1" snaps="true" [(ngModel)]="prefs.displaySettings.voiceRate">
+            <ion-label slot="start">0.5x</ion-label>
+            <ion-label slot="end">1.5x</ion-label>
+          </ion-range>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Meditation Bell</ion-label>
+          <ion-select [(ngModel)]="prefs.displaySettings.meditationBell">
+            <ion-select-option value="silence">None</ion-select-option>
+            <ion-select-option value="singing-bowl">Singing Bowl</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Font Size</ion-label>
+          <ion-select [(ngModel)]="prefs.displaySettings.fontscale">
+            <ion-select-option value="s"><ion-label i18n>S</ion-label></ion-select-option>
+            <ion-select-option value="m"><ion-label i18n>M</ion-label></ion-select-option>
+            <ion-select-option value="l"><ion-label i18n>L</ion-label></ion-select-option>
+            <ion-select-option value="xl"><ion-label i18n>XL</ion-label></ion-select-option>
+            <ion-select-option value="xxl"><ion-label i18n>XXL</ion-label></ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Font</ion-label>
+          <ion-segment [(ngModel)]="prefs.displaySettings.font">
+            <ion-segment-button value="garamond" i18n style="font-family: 'EB Garamond'">Garamond</ion-segment-button>
+            <ion-segment-button value="gill-sans" i18n style="font-family: 'Gill Sans'">Gill Sans</ion-segment-button>
+          </ion-segment>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Dropcaps</ion-label>
+          <ion-segment [(ngModel)]="prefs.displaySettings.dropcaps">
+            <ion-segment-button value="decorated" i18n>
+              <div class="dropcaps-decorated"><span class="drop">A</span></div>
+            </ion-segment-button>
+            <ion-segment-button value="plain" i18n>
+              <div class="dropcaps-plain"><span class="drop">A</span></div>
+            </ion-segment-button>
+            <ion-segment-button value="none" i18n>A</ion-segment-button>
+          </ion-segment>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Antiphons</ion-label>
+          <ion-select [(ngModel)]="prefs.displaySettings.repeatAntiphon">
+            <ion-select-option value="bracket" i18n>Before/After the Invitatory</ion-select-option>
+            <ion-select-option value="repeat" i18n>After each Section</ion-select-option>
+            <ion-select-option value="none" i18n>None</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked" i18n>Responses</ion-label>
+          <ion-segment [(ngModel)]="prefs.displaySettings.response">
+            <ion-segment-button value="bold" i18n>Bold</ion-segment-button>
+            <ion-segment-button value="italics" i18n>Italics</ion-segment-button>
+          </ion-segment>
+        </ion-item>
+        <ion-item>
+          <ion-label i18n>Verse Numbers for Psalms</ion-label>
+          <ion-checkbox [(ngModel)]="prefs.displaySettings.psalmVerses" slot="start"></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label i18n>Verse Numbers for Readings</ion-label>
+          <ion-checkbox [(ngModel)]="prefs.displaySettings.bibleVerses" slot="start"></ion-checkbox>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+  <ng-container *ngIf="display == 'liturgy'">
+    <ng-container *ngFor="let liturgy of menu">
+      <ion-card *ngIf="menuPrefs[liturgy.slug].length > 0">
+        <ion-card-header>
+          <ion-card-title>{{ liturgy.name }}</ion-card-title>
+          <ion-card-subtitle>{{ languageName(liturgy.language) }} | {{ liturgy.version }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content *ngIf="prefs && prefs.preferences[liturgy.language] && prefs.preferences[liturgy.language][liturgy.version] && prefs.preferences[liturgy.language][liturgy.version][liturgy.slug]">
+          <ng-container *ngFor="let item of liturgy.preferences | keyvalue">
+            <ion-item *ngIf="item.value.options && item.value.options.length > 1">
+              <ion-label position="stacked">{{ item.value.label }}</ion-label>
+              <ion-select [name]="item.key" [(ngModel)]="prefs.preferences[liturgy.language][liturgy.version][liturgy.slug][item.key]">
+                <ion-select-option *ngFor="let opt of item.value.options; let ii = index"
+                  [value]="opt.value">
+                  {{ opt.label }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ng-container>
+          <ion-row class="ion-justify-content-center">
+            <ion-button (click)="clearPreferences(liturgy)" color="danger" fill="outline">
+              <ion-icon name="trash-bin" slot="start"></ion-icon>
+              <ion-label i18n>Reset to Default Preferences</ion-label>
+            </ion-button>
+          </ion-row>
+        </ion-card-content>
+        <ion-card-content *ngIf="!(prefs && prefs.preferences[liturgy.language] && prefs.preferences[liturgy.language][liturgy.version] && prefs.preferences[liturgy.language][liturgy.version][liturgy.slug])">
+          <ion-row class="ion-justify-content-center">
+            <p i18n>It looks like you may not have prayed this liturgy before, so you have no saved preferences.</p>
+          </ion-row>
+          <ion-row class="ion-justify-content-center">
+            <ion-button (click)="loadDefaultPreferences(liturgy)">
+              <ion-icon name="reload" slot="start"></ion-icon>
+              <ion-label i18n>Load Default Preferences</ion-label>
+            </ion-button>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </ng-container>
+</ion-content>

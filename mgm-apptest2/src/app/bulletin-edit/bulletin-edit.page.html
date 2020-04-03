@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar class="pray-page-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title i18n routerLink="/">Bulletin Editor</ion-title>
+    <ion-buttons *ngIf="obj" slot="end">
+      <!--<ion-button *ngIf="canDownloadWord && !hasPending" (click)="convertToDocx(obj)" id="word-button">
+        <fa-icon [icon]="faFileWord" slot="icon-only"></fa-icon>
+        <ion-label class="display-hidden">Open in Word</ion-label>
+      </ion-button>
+      <ion-button (click)="showSettings()" id="settings-button">
+        <ion-icon name="settings" slot="icon-only"></ion-icon>
+        <ion-label class="display-hidden">Settings</ion-label>
+      </ion-button>
+      <ion-button (click)="saveBulletin()" id="share-link-button">
+        <ion-icon name="link" slot="icon-only"></ion-icon>
+        <ion-label class="display-hidden">Share Bulletin Link</ion-label>
+      </ion-button>-->
+      <ion-button (click)="actionMenu()" id="action-menu-button">
+        <ion-icon name="more"></ion-icon>
+        <ion-label class="display-hidden">Action Menu</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!obj && !error && !bulletinDraftNotFound">
+  <venite-loading></venite-loading>
+</ion-content>
+<ion-content *ngIf="error && !bulletinDraftNotFound">
+  <venite-error [text]="error" page="BulletinEditPage"></venite-error>
+</ion-content>
+<ion-content *ngIf="bulletinDraftId && bulletinDraftNotFound">
+  <ion-card class="ion-padding">
+    <ion-card-header>
+      <ion-card-title i18n color="danger">Oh no!</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text color="danger" class="ion-padding" i18n>
+        <p>No bulletin with the ID “{{ bulletinDraftId }}” has been found on this device.</p>
+        <p>If somebody sent you a link that opened this page, please ask them to create a Shared Link instead by clicking the <ion-icon name="link"></ion-icon> button in the top-right corner of their Bulletin Editor page.</p>
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+<ion-content *ngIf="obj" class="ion-no-padding">
+  <div [class]="settingsString">
+    <venite-pray [obj]="obj" (objChange)="checkForPending($event)" [bulletinEditor]="true"></venite-pray>
+  </div>
+</ion-content>
+
+<ion-footer id="footer">
+  <ion-toolbar>
+    <ion-label slot="start" id="warning">
+      <ion-text color="danger" i18n>
+        <strong>Note: </strong>This is a personal copy of this bulletin. To share it, click Share Bulletin Link (<ion-icon name="link"></ion-icon>) in the Menu (<ion-icon name="more"></ion-icon>).
+      </ion-text>
+    </ion-label>
+    <ion-buttons slot="end">
+      <ion-button (click)="watchTutorial()">
+        <ion-icon name="videocam" slot="start"></ion-icon>
+        <ion-label i18n>Watch Tutorial</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

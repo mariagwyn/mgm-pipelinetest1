@@ -1,0 +1,12 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title i18n routerLink="/">Edit <span *ngIf="obj">{{ obj.slug }}</span></ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <venite-edit-collect [collect]="obj"></venite-edit-collect>
+</ion-content>

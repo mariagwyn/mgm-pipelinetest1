@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "505746070546",
+    "firebase_url": "https://cantemus-1580214937866.firebaseio.com",
+    "project_id": "cantemus-1580214937866",
+    "storage_bucket": "cantemus-1580214937866.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505746070546:android:6f58a104aa7b1e036b8ccb",
+        "android_client_info": {
+          "package_name": "app.venite"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "505746070546-ggmem74nu8urp7hqv6pbr7419710qn2t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEyfv_hAG7kxn34UPn-VJOqnl18-N6BlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "505746070546-ggmem74nu8urp7hqv6pbr7419710qn2t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "505746070546-2j71q4l7a4q2dvvkvkllr8ugjfidi5oa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.venite"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

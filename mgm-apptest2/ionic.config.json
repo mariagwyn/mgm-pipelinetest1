@@ -1,0 +1,9 @@
+{
+  "name": "venite",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular",
+  "id": "c470e898"
+}

@@ -1,0 +1,40 @@
+<ion-card class="ion-padding">
+  <ion-card-header>
+    <ion-card-title i18n color="danger">Oh no!</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-text color="danger" class="ion-padding" i18n>
+      <p>Something went wrong. Please send an email to
+        <strong><a href="mailto:greg@venite.app?subject=[Venite] [{{ page }}] Bug&body={{ text }} {{ deviceInfo }}">greg@venite.app</a></strong>,
+        including the following error message:
+      </p>
+      <pre class="error">[{{ page }}] {{ now }} {{ text }} {{ deviceInfo }}</pre>
+    </ion-text>
+    <ion-grid class="ion-align-items-center ion-text-center">
+      <ion-row>
+        <ion-col>
+          <ion-button (click)="copy(text)" color="danger"><ion-label i18n>Copy Error Text</ion-label></ion-button>
+          <ion-button href="/"><ion-label i18n>Go Home</ion-label></ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ng-container *ngIf="copied">
+            <div class="message">
+              <ion-label color="success">
+                <ion-icon name="checkmark"></ion-icon> Copied!
+              </ion-label>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="copyError">
+            <div class="message">
+              <ion-label color="danger" i18n>
+                <ion-icon name="alert"></ion-icon> Try copying and pasting the error manually.
+              </ion-label>
+            </div>
+          </ng-container>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+</ion-card>

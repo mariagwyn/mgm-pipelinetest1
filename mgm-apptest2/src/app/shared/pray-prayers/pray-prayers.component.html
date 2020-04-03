@@ -1,0 +1,41 @@
+<ng-container *ngIf="mode == 'free-intercessions'" i18n>
+  <p class="rubric">Free intercessions may be offered.</p>
+</ng-container>
+<ng-container *ngIf="mode == 'meditate'">
+  <ion-item>
+    <ion-button (click)="startMeditation()" slot="start">
+      <ion-icon name="sunny" slot="start"></ion-icon>
+      <ion-label i18n>Meditate for</ion-label>
+    </ion-button>
+    <ion-input [(ngModel)]="meditateMinutes" type="number"></ion-input>
+    <ion-label position="fixed" i18n>minutes</ion-label>
+  </ion-item>
+</ng-container>
+<ng-container *ngIf="mode !== 'free-prayers' && mode !== 'meditate'">
+  <div class="prayers">
+    <ul class="flush">
+      <li *ngFor="let category of value; let categoryIndex = index">
+        <a [routerLink]="" (click)="toggle(category)">{{ category.label }}</a>
+        <ul [hidden]="!category.show">
+          <li *ngFor="let section of category.value; let sectionIndex = index">
+            <a [routerLink]="" (click)="toggle(section)">{{ section.label }}</a>
+            <ul [hidden]="!section.show">
+              <li *ngFor="let prayer of section.value">
+                <a [routerLink]="" (click)="toggle(prayer)">{{ prayer.number }} {{ prayer.label }}</a>
+                <h4 [hidden]="!(prayer.show && prayer.text)">{{ prayer.number }} {{ prayer.label }}</h4>
+                <p [hidden]="!(prayer.show && prayer.text)">
+                  <span class="prayer"
+                    venite-selectable
+                    [citation]="{ label: prayer.number+' '+prayer.label }"
+                    [attr.id]="uid+'-'+categoryIndex+'-'+sectionIndex+'-'+prayer.number"
+                    [innerHTML]="prayer.text | replaceabletext"></span>
+                  <span class="response"> Amen.</span>
+                </p>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</ng-container>

@@ -1,0 +1,50 @@
+<ion-card *ngIf="collect">
+  <ion-card-header>
+    <ion-card-title *ngIf="collect.slug">{{ collect.slug }}</ion-card-title>
+    <ion-card-title *ngIf="!collect.slug" i18n>New Collect</ion-card-title>
+    <ion-card-subtitle *ngIf="collect.language && collect.version">{{ collect.language }} | {{ collect.version }} <span *ngIf="collect.id">| #{{ collect.id }}</span></ion-card-subtitle>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-row>
+      <ion-col class="ion-text-right">
+        <ion-button fill="outline" (click)="replaceNewline()" size="small">
+          <ion-label>\n</ion-label>
+        </ion-button>
+        <ion-button size="small" fill="outline" (click)="save(collect)">
+          <ion-icon name="save" *ngIf="!saving"></ion-icon>
+          <ion-spinner *ngIf="saving"></ion-spinner>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked" i18n>Language</ion-label>
+          <ion-input [(ngModel)]="collect.language"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked" i18n>Version</ion-label>
+          <ion-input [(ngModel)]="collect.version"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-item>
+      <ion-label position="stacked" i18n>Slug</ion-label>
+      <ion-input [(ngModel)]="collect.slug"></ion-input>
+    </ion-item>
+    <ion-item *ngFor="let text of collect.value; let textIndex = index">
+      <ion-label position="stacked" i18n>Text</ion-label>
+      <ion-textarea autoGrow [autofocus]="autofocus" [(ngModel)]="collect.value[textIndex]"></ion-textarea>
+      <ion-buttons slot="end">
+        <ion-button fill="outline" (click)="appendAfter(textIndex, collect.value, '')" slot="end" size="small">
+          <ion-icon name="add-circle-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="outline" (click)="remove(textIndex, collect.value)" slot="end" size="small">
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-card-content>
+</ion-card>

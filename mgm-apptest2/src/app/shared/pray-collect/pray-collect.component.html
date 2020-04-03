@@ -1,0 +1,11 @@
+<p *ngFor="let prayer of compiledValue; let ii = index">
+  <ng-container *ngFor="let chunk of prayer; let chunkIndex = index">
+    <span
+      venite-selectable
+      [citation]="{ label: label }"
+      [attr.id]="uid+'-'+ii+'-'+chunkIndex"
+      [innerHTML]="chunk | typography:false:ii+chunkIndex"></span>
+  </ng-container>
+  <span class="response" *ngIf="response"> {{ response }}</span>
+  <span class="response" *ngIf="!response"> Amen.</span>
+</p>

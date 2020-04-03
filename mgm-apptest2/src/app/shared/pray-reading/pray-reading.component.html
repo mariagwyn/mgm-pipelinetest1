@@ -1,0 +1,68 @@
+<ng-container *ngIf="eucharistic_intro">
+  <ion-toolbar class="reading-citation">
+    <ion-label slot="start">
+      <h4 i18n>The Gospel</h4>
+    </ion-label>
+    <ion-label slot="end" class="citation">
+      <h4>{{ citation }} ({{ version }})</h4>
+    </ion-label>
+  </ion-toolbar>
+  <p>
+    <span i18j>The Holy Gospel of our Lord Jesus Christ according to {{ bookName }}.</span><br>
+    <span class="response" i18n>Glory to you, Lord Christ.</span>
+  </p>
+</ng-container>
+<ng-container *ngIf="labelled_reading">
+  <ion-toolbar class="reading-citation">
+    <ion-label slot="start">
+      <h4 i18n>{{ label }}</h4>
+    </ion-label>
+    <ion-label slot="end" class="citation">
+      <h4>{{ citation }} ({{ version }})</h4>
+    </ion-label>
+  </ion-toolbar>
+  <p>
+    <span i18j>A reading from {{ fullBookName }}.</span><br>
+  </p>
+</ng-container>
+<ion-toolbar *ngIf="bulletinEditor">
+  <ion-buttons *ngIf="!changingReading" slot="end">
+    <ion-button (click)="readingMenu()">
+      <ion-icon name="swap" slot="start"></ion-icon>
+      <ion-label i18n>Change Reading</ion-label>
+    </ion-button>
+  </ion-buttons>
+  <ion-buttons *ngIf="changingReading" slot="end">
+    <ion-input [(ngModel)]="citation" name="citation"></ion-input>
+    <ion-button (click)="getText()" fill="clear">
+      <ion-icon name="checkmark" slot="icon-only"></ion-icon>
+      <ion-label i18n class="display-hidden">Change</ion-label>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<ng-container *ngIf="!verses">
+  <ng-container *ngFor="let para of compiledValue; let paraIndex = index">
+    <p [lang]="language" [dir]="dir" class="reading">
+      <span class="chunk"
+        venite-selectable
+        [citation]="{ string: citation }"
+        [attr.id]="uid+'-'+paraIndex+'-'+chunkIndex"
+        *ngFor="let chunk of para; let chunkIndex = index"
+        [innerHTML]="chunk | typography:false:paraIndex+chunkIndex"></span>
+    </p>
+  </ng-container>
+</ng-container>
+<ng-container *ngIf="verses">
+  <ng-container *ngFor="let section of verses; let sectionIndex = index">
+    <p venite- [lang]="language" [dir]="dir" class="reading">
+      <span *ngFor="let verse of section; let verseIndex = index">
+        <sup *ngIf="verseIndex !== 0">{{ verse.verse }}</sup>
+        <span venite-selectable
+           [citation]="verse"
+           [attr.id]="verse.book+'-'+verse.chapter+'-'+verse.verse"
+           [innerHTML]="verse.text | typography:false:verseIndex+sectionIndex">
+         </span>
+      </span>
+    </p>
+  </ng-container>
+</ng-container>

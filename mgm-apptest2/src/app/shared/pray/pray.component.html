@@ -1,0 +1,35 @@
+<div *ngIf="obj" class="border" [style.background]="bordercolor" [style.border-color]="bordercolor">
+  <ion-row class="ion-justify-content-center">
+    <div class="prayer-body ion-padding">
+      <!-- header material for the whole service -->
+      <h1>{{ obj.name }}</h1>
+      <h2 *ngIf="obj.day.date && !(holyDayObserved(obj.day) && holyDayName(obj.day))">
+        <span *ngIf="!isSunday" i18n>
+          <span>{{ liturgyDate | date:'EEEE' }} after <span *ngIf="!obj.day.omit_the">the </span></span>
+          {{ obj.day.week.name }}
+        </span>
+        <span *ngIf="isSunday">{{ obj.day.week.name }}</span>
+      </h2>
+      <h2 *ngIf="holyDayObserved(obj.day) && holyDayName(obj.day)" class="holydayname">{{ holyDayName(obj.day) }}</h2>
+      <h3 *ngIf="obj.day.proper">({{ obj.day.proper.label }})</h3>
+      <ng-container *ngIf="hasIcon">
+        <a [href]="iconUrl" target="_system">
+          <img class="icon" [src]="icon">
+        </a>
+      </ng-container>
+
+
+      <!-- render sub-items -->
+      <venite-pray-section *ngFor="let section of obj.liturgy; let ii = index"
+        [label]="section.label"
+        [toggle]="section.toggle"
+        [show]="section.show"
+        [value]="section.value"
+        (onChange)="sectionChanged(ii, $event)"
+        [language]="obj.language"
+        [liturgyversions]="obj.liturgyversions"
+        [bulletinEditor]="bulletinEditor">
+      </venite-pray-section>
+    </div>
+  </ion-row>
+</div>

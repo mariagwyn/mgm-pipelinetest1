@@ -1,0 +1,91 @@
+<ion-header>
+  <ion-toolbar class="pray-page-toolbar ion-align-items-right">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+      <ion-menu-button></ion-menu-button>
+      <ion-button (click)="undoSelection()" *ngIf="selection && (canUndoSelect | async)">
+        <ion-icon name="undo" slot="icon-only"></ion-icon>
+        <ion-label class="display-hidden">Undo</ion-label>
+      </ion-button>
+      <ion-button (click)="redoSelection()" *ngIf="selection && (canRedoSelect | async)">
+        <ion-icon name="redo" slot="icon-only"></ion-icon>
+        <ion-label class="display-hidden">Redo</ion-label>
+      </ion-button>
+    </ion-buttons>
+    <ion-title i18n routerLink="/">Pray</ion-title>
+    <ion-buttons *ngIf="obj" slot="end">
+      <!--<ion-button (click)="speak()" *ngIf="voiceChoices && !speechPlaying &&!hasPending">
+        <ion-icon name="headset" slot="icon-only"></ion-icon>
+        <ion-label class="display-hidden">Read Aloud</ion-label>
+      </ion-button>
+      <ion-button *ngIf="canDownloadWord && !hasPending" (click)="convertToDocx(obj)">
+        <fa-icon [icon]="faFileWord" slot="icon-only"></fa-icon>
+        <ion-label class="display-hidden">Open in Word</ion-label>
+      </ion-button>
+      <ion-button (click)="showSettings()">
+        <ion-icon name="settings" slot="icon-only"></ion-icon>
+        <ion-label class="display-hidden">Settings</ion-label>
+      </ion-button>
+      <ion-button (click)="saveBulletin()">
+        <ion-icon name="link" slot="icon-only"></ion-icon>
+        <ion-label class="display-hidden">Share Bulletin Link</ion-label>
+      </ion-button>-->
+      <ion-button (click)="clearSelection()" *ngIf="selection">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+        <ion-label class="display-hidden">Clear Selection</ion-label>
+      </ion-button>
+      <ion-button (click)="actionMenu()" id="action-menu-button">
+        <ion-icon name="more"></ion-icon>
+        <ion-label class="display-hidden">Action Menu</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!obj && !error">
+  <venite-loading></venite-loading>
+</ion-content>
+<ion-content *ngIf="error">
+  <venite-error [text]="error" page="PrayPage"></venite-error>
+</ion-content>
+<ion-content *ngIf="obj" class="ion-no-padding">
+  <div [class]="settingsString">
+    <venite-pray [obj]="obj" (objChange)="checkForPending($event)" [bulletinEditor]="false"></venite-pray>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar *ngIf="speechPlaying">
+    <ion-buttons class="ion-justify-content-center">
+      <ion-button (click)="rewind()" *ngIf="voiceChoices && speechPlaying" slot="start">
+        <ion-icon name="rewind" slot="icon-only"></ion-icon>
+        <ion-label class="display-hidden">Rewind</ion-label>
+      </ion-button>
+      <ion-button (click)="pauseSpeech()" *ngIf="voiceChoices && speechPlaying && !speechPaused">
+        <ion-icon name="pause" slot="icon-only"></ion-icon>
+        <ion-label class="display-hidden">Pause</ion-label>
+      </ion-button>
+      <ion-button (click)="resumeSpeech()" *ngIf="voiceChoices && speechPlaying && speechPaused">
+        <ion-icon name="play" slot="icon-only"></ion-icon>
+        <ion-label class="display-hidden">Resume</ion-label>
+      </ion-button>
+      <ion-button (click)="fastForward()" *ngIf="voiceChoices && speechPlaying" slot="end">
+        <ion-icon name="fastforward" slot="icon-only"></ion-icon>
+        <ion-label class="display-hidden">Fast Forward</ion-label>
+      </ion-button>
+    </ion-buttons>
+    <!--<ion-text>{{ audioText | async }}</ion-text>-->
+  </ion-toolbar>
+  <ion-toolbar *ngIf="selection">
+    <ion-buttons slot="start">
+      <ion-button *ngIf="sharingEnabled && selection && selection.text && selection.text !== ''" (click)="share(selection)">
+        <ion-icon name="share"></ion-icon>
+        <ion-label class="display-hidden">Share</ion-label>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <venite-mark-favorite *ngIf="selection && selection.text && selection.text !== ''"
+        [selection]="selection" [favoriteMarked]="favoriteMarked"></venite-mark-favorite>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

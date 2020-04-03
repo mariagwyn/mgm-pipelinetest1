@@ -1,0 +1,44 @@
+<div *ngIf="obj" [id]="obj.uid" class="obj">
+  <ng-container [ngSwitch]="obj.type">
+    <venite-pray-rubric *ngSwitchCase="'rubric'"
+      [value]="obj.value" [uid]="obj.uid"></venite-pray-rubric>
+    <venite-pray-scripture *ngSwitchCase="'scripture'"
+      [label]="obj.label" [uid]="obj.uid" [value]="obj.value" [source]="obj.citation || obj.source" [response]="obj.response"></venite-pray-scripture>
+    <venite-pray-text *ngSwitchCase="'text'" [value]="obj.value" [label]="obj.label" [uid]="obj.uid" [response]="obj.response"></venite-pray-text>
+    <venite-pray-responsive-prayer *ngSwitchCase="'preces'" [uid]="obj.uid" [label]="obj.label" [value]="obj.value" [response]="obj.response"></venite-pray-responsive-prayer>
+    <venite-pray-responsive-prayer *ngSwitchCase="'litany'" [uid]="obj.uid" [label]="obj.label" [value]="obj.value" [response]="obj.response"></venite-pray-responsive-prayer>
+    <venite-pray-responsive-prayer *ngSwitchCase="'responsive'" [uid]="obj.uid" [label]="obj.label" [value]="obj.value" [response]="obj.response"></venite-pray-responsive-prayer>
+    <venite-pray-gloria *ngSwitchCase="'gloria'" [uid]="obj.uid" [value]="obj.value"></venite-pray-gloria>
+    <venite-pray-psalm *ngSwitchCase="'psalm' || 'canticle'"
+      [slug]="obj.slug"
+      [canticle]="obj.canticle"
+      [invitatory]="obj.invitatory"
+      [number]="obj.number"
+      [english]="obj.localname"
+      [latin]="obj.latinname"
+      [value]="obj.value"
+      [antiphon]="obj.antiphon"
+      [citation]="obj.citation"
+      [omit_gloria]="obj.omit_gloria"
+      [language]="obj.language"
+      [version]="obj.version"
+      [bulletinEditor]="bulletinEditor"></venite-pray-psalm>
+    <venite-pray-reading *ngSwitchCase="'reading'"
+      [uid]="obj.uid"
+      [value]="obj.value"
+      [verses]="obj.verses"
+      [language]="obj.language"
+      [citation]="obj.citation"
+      [version]="obj.version"
+      [eucharistic_intro]="obj.eucharistic_intro"
+      [labelled_reading]="obj.labelled_reading"
+      [label]="obj.label"
+      (readingLoaded)="updateReading($event)"
+      [bulletinEditor]="bulletinEditor"
+      ></venite-pray-reading>
+    <venite-pray-collect *ngSwitchCase="'collect'" [uid]="obj.uid" [label]="obj.label" [value]="obj.value" [response]="obj.response"></venite-pray-collect>
+    <venite-pray-prayers *ngSwitchCase="'prayers'" [uid]="obj.uid" [value]="obj.value" [mode]="obj.slug"></venite-pray-prayers>
+    <venite-pray-antiphon *ngSwitchCase="'antiphon'" [uid]="obj.uid" [value]="obj.value"></venite-pray-antiphon>
+    <p *ngSwitchDefault>{{obj|json}}</p>
+  </ng-container>
+</div>

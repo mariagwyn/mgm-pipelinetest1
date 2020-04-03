@@ -1,0 +1,139 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title *ngIf="prayer.slug">{{ prayer.slug }}</ion-card-title>
+    <ion-card-title *ngIf="!prayer.slug" i18n>New Prayer</ion-card-title>
+    <ion-card-subtitle *ngIf="prayer.language && prayer.version">{{ prayer.language }} | {{ prayer.version }} <span *ngIf="prayer.id">| #{{ prayer.id }}</span></ion-card-subtitle>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-row>
+      <ion-col text-right>
+        <ion-button size="small" *ngIf="canTranslate" fill="outline" (click)="emit(prayer)">
+          <fa-icon [icon]="faLanguage"></fa-icon>
+        </ion-button>
+        <ion-button size="small" fill="outline" (click)="save(prayer)">
+          <ion-icon name="save" *ngIf="!saving"></ion-icon>
+          <ion-spinner *ngIf="saving"></ion-spinner>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked" i18n>Language</ion-label>
+          <ion-input [(ngModel)]="prayer.language"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked" i18n>Version</ion-label>
+          <ion-input [(ngModel)]="prayer.version"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-item>
+      <ion-label position="stacked">Type</ion-label>
+      <ion-select [(ngModel)]="prayer.type">
+        <ion-select-option value="scripture" i18n>Scripture</ion-select-option>
+        <ion-select-option value="text" i18n>Text</ion-select-option>
+        <ion-select-option value="responsive" i18n>Responsive</ion-select-option>
+        <ion-select-option value="collect" i18n>Collect</ion-select-option>
+        <ion-select-option value="rubric" i18n>Rubric</ion-select-option>
+        <ion-select-option value="antiphon" i18n>Antiphon</ion-select-option>
+        <ion-select-option value="gloria" i18n>Gloria</ion-select-option>
+        <ion-select-option value="prayers" i18n>Prayers</ion-select-option>
+      </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Slug</ion-label>
+        <ion-input [(ngModel)]="prayer.slug"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Category</ion-label>
+        <ion-input [(ngModel)]="prayer.category"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Label</ion-label>
+        <ion-input [(ngModel)]="prayer.label"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Version Label</ion-label>
+        <ion-input [(ngModel)]="prayer.version_label"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Citation</ion-label>
+        <ion-input [(ngModel)]="prayer.citation"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Response</ion-label>
+        <ion-textarea [(ngModel)]="prayer.response"></ion-textarea>
+      </ion-item>
+      <ion-card-subtitle i18n>Value</ion-card-subtitle>
+        <!-- Different value editors for different prayer types -->
+        <ng-container *ngIf="['rubric','scripture','text','collect','antiphon','gloria'].includes(prayer.type)">
+          <ion-item *ngIf="!prayer.value || prayer.value.length == 0">
+            <ion-button (click)="initValue()" slot="end">
+              <ion-icon name="add-circle-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-item *ngFor="let para of prayer.value; let index = index; trackBy: trackByIndex;">
+            <ion-textarea [(ngModel)]="prayer.value[index]"></ion-textarea>
+            <ion-button fill="outline" (click)="replaceNewline(para, index)" slot="end" size="small">
+              <ion-label>\n</ion-label>
+            </ion-button>
+            <ion-button fill="outline" (click)="appendAfter(index, prayer.value, '')" slot="end" size="small">
+              <ion-icon name="add-circle-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="outline" (click)="remove(index, prayer.value)" slot="end" size="small">
+              <ion-icon name="trash"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ng-container>
+        <ng-container *ngIf="['responsive','preces','litany'].includes(prayer.type)">
+          <ion-item>
+            <ion-button fill="outline" (click)="initLitany()" slot="end" size="small">
+              <ion-icon name="add-circle-outline"></ion-icon>
+              <ion-label i18n>Litany</ion-label>
+            </ion-button>
+            <ion-button fill="outline" (click)="initPreces()" slot="end" size="small">
+              <ion-icon name="add-circle-outline"></ion-icon>
+              <ion-label i18n>Preces</ion-label>
+            </ion-button>
+          </ion-item>
+          <ng-container *ngIf="isLitany()">
+            <ng-container *ngFor="let line of prayer.value; let index = index; trackBy: trackByIndex">
+              <ion-item>
+                <ion-textarea [(ngModel)]="line[0]"></ion-textarea>
+                <ion-button fill="outline" (click)="remove(index, prayer.value)" slot="end" size="small">
+                  <ion-icon name="trash"></ion-icon>
+                </ion-button>
+                <ion-button fill="outline" (click)="addLitanyLine(index, prayer.value)" slot="end" size="small">
+                  <ion-icon name="add-circle-outline"></ion-icon>
+                </ion-button>
+              </ion-item>
+              <ion-item *ngIf="line[1]">
+                <ion-textarea [(ngModel)]="line[1]"></ion-textarea>
+                <ion-button fill="outline" (click)="remove(1, prayer.value[index])" slot="end" size="small">
+                  <ion-icon name="trash"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="isPreces()">
+            <ion-item *ngFor="let line of prayer.value; let index = index">
+              <ion-grid>
+                <ion-row >
+                  <ion-col size="3"><ion-input [(ngModel)]="line.label"></ion-input></ion-col>
+                  <ion-col size="9"><ion-input [(ngModel)]="line.text"></ion-input></ion-col>
+                </ion-row>
+              </ion-grid>
+              <ion-button fill="outline" (click)="addPrecesLine(index, prayer.value)" slot="end" size="small">
+                <ion-icon name="add-circle-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="prayer.type == 'prayers'">
+          <pre>{{ prayer.value | json }}</pre>
+        </ng-container>
+    </ion-card-content>
+</ion-card>

@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-menu-button slot="start"></ion-menu-button>
+    <ion-title routerLink="/">Bulletins</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" *ngIf="!error">
+  <h2>Draft Bulletins</h2>
+  <div *ngIf="drafts && drafts.length == 0" class="tutorial ion-padding" i18n>
+    <h1>Looks like you haven’t saved any <span class="link">drafts</span>.</h1>
+    <p>Go to the <a routerLink='/'>Pray menu page</a> and click “Create Bulletin” to start a bulletin for one of the offices. Adjust the settings and edit the liturgy however you’d like. The draft bulletin will autosave on this device when you make changes, and you can access it from this page.</p>
+    <p>To share the draft with other people, click the <ion-icon name="link" aria-label="link" class="link"></ion-icon> button in the top-right corner.</p>
+  </div>
+  <ion-list *ngIf="drafts && drafts.length > 0">
+    <ion-item *ngFor="let bulletin of drafts" [routerLink]="['/', 'bulletin', bulletin.uid, 'edit']">
+      <ion-label>
+        <h2 i18n>{{ bulletin.liturgy.name }} for {{ bulletin.liturgy.date | date}}</h2>
+        <p i18n *ngIf="bulletin.date_added">Created on {{ bulletin.date_added | date:'shortDate'}} at {{ bulletin.date_added | date:'shortTime' }}</p>
+        <p i18n *ngIf="bulletin.date_modified && bulletin.date_added !== bulletin.date_modified">Edited on {{ bulletin.date_modified | date:'shortDate'}} at {{ bulletin.date_modified | date:'shortTime' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <h2>Saved Bulletins</h2>
+  <div *ngIf="bulletins && bulletins.length == 0" class="tutorial ion-padding" i18n>
+    <h1>Looks like you haven’t saved any <span class="link">bulletins</span>.</h1>
+    <p><a routerLink='/'>Pray</a> one of the offices or <a routerLink='/'>start a new bulletin</a>. Adjust the settings and edit the liturgy however you’d like, then click the <ion-icon name="link" aria-label="link" class="link"></ion-icon> button in the top-right corner.</p>
+    <p>All shared bulletins that you’ve created on this device will appear in this list.</p>
+  </div>
+  <ion-list *ngIf="bulletins && bulletins.length > 0">
+    <ion-item *ngFor="let bulletin of bulletins" [routerLink]="['/', 'pray', 'bulletin', bulletin.id]">
+      <ion-label>
+        <h2 i18n>{{ bulletin.liturgy.name }} for {{ bulletin.liturgy.date | date}}</h2>
+        <p i18n *ngIf="bulletin.date_added">Created on {{ bulletin.date_added | date:'shortDate'}} at {{ bulletin.date_added | date:'shortTime' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+<ion-content class="ion-padding" *ngIf="error">
+  <venite-error [text]="error" page="BulletinsPage"></venite-error>
+</ion-content>

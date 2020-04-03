@@ -1,0 +1,67 @@
+<ion-menu side="start" menuId="menu" content-id="main">
+  <ion-header>
+    <ion-toolbar>
+      <ion-thumbnail slot="start">
+        <ion-img src="/assets/icon/venite.svg"></ion-img>
+      </ion-thumbnail>
+      <ion-title>Venite</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item routerLink="/">
+        <ion-icon name="book" slot="start"></ion-icon>
+        <ion-label i18n>Pray</ion-label>
+      </ion-item>
+      <!-- Add this back in when we build bulletin function -->
+      <!--<ion-item routerLink="/plan">
+        <ion-icon name="clipboard" slot="start"></ion-icon>
+        <ion-label i18n>Plan</ion-label>
+      </ion-item>-->
+      <ion-item routerLink="/meditate">
+        <ion-icon name="sunny" slot="start"></ion-icon>
+        <ion-label i18n>Meditate</ion-label>
+      </ion-item>
+      <ion-item routerLink="/favorites">
+        <ion-icon name="heart" slot="start"></ion-icon>
+        <ion-label i18n>Favorites</ion-label>
+      </ion-item>
+      <ion-item routerLink="/reminders" *ngIf="remindersEnabled">
+        <ion-icon name="notifications" slot="start"></ion-icon>
+        <ion-label i18n>Reminders</ion-label>
+      </ion-item>
+      <ion-item *ngIf="isAuthenticated() && hasContentAdminAccess" routerLink="/create">
+        <ion-icon name="create" slot="start"></ion-icon>
+        <ion-label i18n>Create</ion-label>
+      </ion-item>
+      <!--<ion-item *ngIf="isAuthenticated() && hasContentAdminAccess" routerLink="/translate">
+        <fa-icon [icon]="faLanguage" slot="start"></fa-icon>
+        <ion-label i18n>Translate</ion-label>
+      </ion-item>-->
+      <ion-item routerLink="/bulletins">
+        <ion-icon name="link" slot="start"></ion-icon>
+        <ion-label i18n>Bulletins <span class="beta"><sup>(beta)</sup></span></ion-label>
+      </ion-item>
+      <ion-item routerLink="/psalter">
+        <ion-icon name="musical-notes" slot="start"></ion-icon>
+        <ion-label i18n>Psalter</ion-label>
+      </ion-item>
+      <ion-item routerLink="/settings">
+        <ion-icon name="settings" slot="start"></ion-icon>
+        <ion-label i18n>Settings</ion-label>
+      </ion-item>
+      <ion-item routerLink="/about">
+        <ion-icon name="help-buoy" slot="start"></ion-icon>
+        <ion-label i18n>About</ion-label>
+      </ion-item>
+      <ion-item button (click)="signOut()" *ngIf="isAuthenticated()" slot="start">
+        <ion-icon name="log-out" slot="start"></ion-icon>
+        <ion-label i18n>Sign out</ion-label>
+      </ion-item>
+      <ion-item button (click)="signIn()" *ngIf="!isAuthenticated()" slot="start"  button>
+        <ion-icon name="log-in" slot="start"></ion-icon>
+        <ion-label i18n>Sign in</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>

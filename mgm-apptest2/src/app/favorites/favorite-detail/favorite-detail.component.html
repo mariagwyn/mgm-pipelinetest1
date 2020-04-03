@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title i18n routerLink="/">Favorites</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="delete(obj)">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+        <ion-label class="display-hidden" i18n>Delete</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title *ngIf="obj.citation">{{ obj.citation}}</ion-card-title>
+      <ion-card-subtitle>{{ obj.dateAdded | date:'shortDate' }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>{{ obj.text }}</p>
+      <ion-textarea autoGrow [value]="obj.note" (ionChange)="updateFavoriteText($event)" debounce="500" placeholder="Why did you like it? You can use #hashtags">
+      </ion-textarea>
+      <ion-item>
+        <ion-label slot="start">
+          <p i18n *ngIf="obj.tags && obj.tags.length > 0">Tags:
+            <ng-container *ngFor="let tag of obj.tags; let index = index">
+              <a [routerLink]="['..']" [fragment]="tag | fragment" class="tag">{{tag}}</a>
+              <span *ngIf="index < obj.tags.length - 1"> | </span>
+            </ng-container>
+          </p>
+        </ion-label>
+        <ion-button [routerLink]="obj.url" [fragment]="obj.fragment" slot="end" fill="clear">
+          <ion-label i18n>Show in Context</ion-label>
+          <ion-icon slot="end" name="arrow-forward"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

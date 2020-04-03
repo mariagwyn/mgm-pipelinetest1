@@ -1,0 +1,129 @@
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { SelectedTextEvent, SelectableCitation } from '../models/selection.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class SelectionService {
+  selection$ : Subject<SelectedTextEvent> = new Subject();
+  selects : { range: Range; citation: SelectableCitation; id: string; }[] = new Array();
+  undoneSelects : { range: Range; citation: SelectableCitation; id: string; }[] = new Array();
+  canUndo$ : Subject<boolean> = new Subject();
+  canRedo$ : Subject<boolean> = new Subject();
+
+  constructor() { }
+
+  next(selection : SelectedTextEvent) {
+    this.selection$.next(selection);
+  }
+
+  selections() : Subject<SelectedTextEvent> {
+    return this.selection$;
+  }
+
+  add(el : HTMLElement, citation : SelectableCitation) {
+    let r = new Range();
+    r.selectNodeContents(el);
+    this.selects.push({range: r, citation, id: el.id});
+    this.updateSelection();
+    this.canRedo$.next(this.undoneSelects.length > 0);
+    this.canUndo$.next(this.selects.length > 0);
+  }
+
+  undo() {
+    let undone = this.selects.pop();
+    console.log('selects now = ', this.selects);
+    this.undoneSelects.push(undone);
+    this.canUndo$.next(this.selects.length > 0);
+    this.canRedo$.next(this.undoneSelects.length > 0);
+    this.updateSelection();
+  }
+
+  redo() {
+    let redone = this.undoneSelects.pop();
+    this.selects.push(redone);
+    this.canRedo$.next(this.undoneSelects.length > 0);
+    this.canUndo$.next(this.selects.length > 0);
+    this.updateSelection();
+  }
+
+  undoable() : Subject<boolean> {
+    return this.canUndo$;
+  }
+
+  redoable() : Subject<boolean> {
+    return this.canRedo$;
+  }
+
+  getOneCitation(citation : SelectableCitation) : string {
+    if(citation) {
+      if(citation.hasOwnProperty('string')) {
+        return citation.string;
+      } else if(citation.hasOwnProperty('label')) {
+        return citation.label;
+      } else if(citation.hasOwnProperty('book') && citation.hasOwnProperty('chapter') && citation.hasOwnProperty('verse')) {
+        return `${citation.book}. ${citation.chapter}:${citation.verse}`;
+      } else {
+        console.log("Had difficulty creating a citation from ", citation);
+        return undefined;
+      }
+    } else {
+      return undefined;
+    }
+  }
+
+  getCitation(selects : { range: Range; citation: SelectableCitation; id: string; }[]) : string {
+    let citations = selects.map(s => s.citation);
+    return citations
+      .map(c => this.getOneCitation(c))
+      .reduce((uniques, item) => {
+        return uniques.includes(item) ? uniques : [...uniques, item];
+      }, [])
+
+      .join('; ');
+  }
+
+  maximizeRange(selects : { range: Range; citation: SelectableCitation; id: string; }[]) {
+    document.getSelection().removeAllRanges();
+    let baseRange : Range;
+    selects.filter(s => !!s)
+    .map(s => s.range)
+    .forEach((thisRange, ii) => {
+      if(!baseRange) {
+        baseRange = thisRange.cloneRange();
+      } else {
+        const isBefore : boolean = thisRange.compareBoundaryPoints(Range.START_TO_START, baseRange) == -1;
+        if(isBefore) {
+          baseRange.setStartBefore(document.getElementById(selects[ii].id));
+        }
+
+        const isAfter : boolean = thisRange.compareBoundaryPoints(Range.END_TO_END, baseRange) == 1;
+        if(isAfter) {
+          baseRange.setEndAfter(document.getElementById(selects[ii].id));
+        }
+      }
+      //document.getSelection().addRange(selection.range) // only works in Firefox to add multiple ranges
+    });
+    if(baseRange) {
+      document.getSelection().addRange(baseRange);
+    }
+  }
+
+  updateSelection() {
+    this.maximizeRange(this.selects);
+    console.log('[SpeechService] Selected text is: "', document.getSelection().toString(), '"', document.getSelection().isCollapsed);
+    let s = document.getSelection(),
+        text : string = s.toString();
+    let id = this.selects.map(s => s.id).filter(s => !!s)[0],
+        citation = this.getCitation(this.selects);
+    this.next({text, id, citation});
+    console.log('[SelectionService] next()', { text, id, citation});
+  }
+
+  clear() {
+    document.getSelection().removeAllRanges();
+    this.selects = new Array();
+    this.next(undefined);
+  }
+}

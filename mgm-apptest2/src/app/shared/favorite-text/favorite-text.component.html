@@ -1,0 +1,5 @@
+<ion-item class="ion-padding favorite-text">
+  <ion-textarea autoGrow *ngIf="favorited" (ionChange)="updateFavoriteText($event)" debounce="500" placeholder="Why did you like it? You can use #hashtags">
+  </ion-textarea>
+  <ion-icon *ngIf="textUpdated" slot="end" name="checkmark" [@checkmark]="textUpdated"></ion-icon>
+</ion-item>

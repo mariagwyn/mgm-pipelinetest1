@@ -1,0 +1,251 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css"
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css"
+@import "~@ionic/angular/css/structure.css"
+@import "~@ionic/angular/css/typography.css"
+@import '~@ionic/angular/css/display.css'
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css"
+@import "~@ionic/angular/css/float-elements.css"
+@import "~@ionic/angular/css/text-alignment.css"
+@import "~@ionic/angular/css/text-transformation.css"
+@import "~@ionic/angular/css/flex-utils.css"
+
+/* Global styles */
+.can-go-back .pray-page-toolbar
+  ion-menu-button
+    display: none
+
+.dark .border
+  background: none !important
+  border: none !important
+
+.hidden *
+  text-decoration: line-through !important
+
+  .hidden ion-button
+    text-decoration: none !important
+
+@font-face
+  font-family: 'EB Garamond Initials'
+  src: url('./assets/EBGaramond-Initials.ttf')
+
+/*.selectable
+  -webkit-user-select: text
+  -moz-user-select: text
+  -ms-user-select: text
+  user-select: text*/
+
+.venite-selected
+  background-color: #d4e7ff
+
+.venite-liked
+  background-color: #FFC0CB
+
+.md ion-title
+  font-family: 'EB Garamond'
+  font-weight: bold
+
+venite-pray p, venite-pray h1, venite-pray h2, venite-pray h3, venite-pray h4, venite-pray h5, venite-pray td, venite-pray .reading-citation .citation
+  font-family: 'EB Garamond' !important
+
+/* typography */
+.tetragrammaton
+  font-variant: small-caps
+
+/* Dropcaps setting */
+.dropcaps-decorated .firstword, .dropcaps-plain .firstword
+  font-variant: small-caps
+
+p .drop
+  float: left
+
+p[dir='rtl'] .drop
+  float: right
+  font-family: 'Times New Roman' !important
+
+.dropcaps-decorated .drop
+  font-family: 'EB Garamond Initials', 'EB Garamond'
+  font-size: 2.5em
+  /*float: left*/
+  margin-right: 0.05em
+  line-height: 1em
+
+@media(min-width: 767px)
+  .dropcaps-decorated .drop
+    font-size: 4.3em
+    /*float: left*/
+    margin-right: 0.05em
+    margin-top: 0
+    line-height: .8em
+
+.dropcaps-plain .drop
+  font-family: 'EB Garamond'
+  font-size: 2.7em
+  /*float: left*/
+  margin-right: 0.05em
+  margin-top: -0.05em
+  line-height: 1em
+
+@media(min-width: 767px)
+  .dropcaps-plain .drop
+    font-size: 5em
+    /*float: left*/
+    margin-right: 0.05em
+    margin-top: -0.05em
+    line-height: .8em
+
+.dropcaps-none .drop
+  font-family: 'EB Garamond'
+
+/* Response setting */
+.response
+  font-style: normal
+  font-weight: bold
+
+.response-bold .response
+  font-style: normal !important
+  font-weight: bold !important
+
+.response-italics .response
+  font-style: italic !important
+  font-weight: normal !important
+
+/* Font size setting */
+p, td, h5, h4, .canticle-citation
+  font-size: 13pt
+
+.fontscale-s p, .fontscale-s td, .fontscale-s h5, .fontscale-s h4, .fontscale-s .canticle-citation
+  font-size: 10pt
+
+.fontscale-m p, .fontscale-m td, .fontscale-m h5, .fontscale-m h4, .fontscale-m .canticle-citation
+  font-size: 13pt
+
+.fontscale-l p, .fontscale-l td, .fontscale-l h5, .fontscale-l h4, .fontscale-l .canticle-citation
+  font-size: 16pt
+
+.fontscale-xl p, .fontscale-xl td, .fontscale-xl h5, .fontscale-xl h4, .fontscale-xl .canticle-citation
+  font-size: 18pt
+
+.fontscale-xxl p, .fontscale-xxl td, .fontscale-xxl h5, .fontscale-xxl h4, .fontscale-xxl .canticle-citation
+  font-size: 24pt
+
+.font-garamond p, .font-garamond h1, .font-garamond h2, .font-garamond h3, .font-garamond h4, .font-garamond h5, .font-garamond td, .font-garamond .reading-citation .citation
+  font-family: 'EB Garamond'
+
+.font-gill-sans p, .font-gill-sans h1, .font-gill-sans h2, .font-gill-sans h3, .font-gill-sans h4, .font-gill-sans h5, .font-gill-sans td, .font-gill-sans .drop, .font-gill-sans .reading-citation .citation
+  font-family: 'Gill Sans' !important
+
+.psalm .number
+  display: none
+
+/*.halfverse
+  left: 1em
+  position: relative
+  padding-right: 1.25em*/
+
+/*.psalmverses-true
+  .psalm
+    .numbered
+      position: relative
+      left: 1.5em
+
+      .number
+        display: inline
+        position: relative
+        left: -1.5em
+
+      .halfverse
+        left: 2em
+        position: relative
+        padding-right: 2.25em
+
+      sup
+        display: inline !important*/
+
+/*.psalmverses-true .psalm:first-child .numbered
+  left: 0*/
+
+.halfverse
+  display: inline-block
+  margin-left: 1em
+
+.psalmverses-true
+  sup
+    display: inline-block !important
+    margin-right: 1em
+
+  .psalm
+    .numbered
+      .numbered-wrapper
+        display: table-row
+
+        .verse, sup
+          display: table-cell
+
+      .halfverse
+        margin-left: 2em
+
+    .numbered:first-child
+      .numbered-wrapper
+        display: block
+
+        .verse, sup
+          display: inline
+
+      .halfverse-wrapper
+          display: inline
+
+      .halfverse
+        margin-left: 2em
+
+.psalmverses-false .psalm sup
+  display: none
+
+.bibleverses-true .reading sup
+  display: inline
+
+.bibleverses-false .reading sup
+  display: none
+
+.repeat-antiphon
+  display: none
+
+.repeat-antiphon-repeat .repeat-antiphon
+  display: block
+
+.repeat-antiphon-none .antiphon
+  display: none
+
+.popover-content
+  width: 320px !important
+
+.display-hidden
+  visibility: hidden
+  clip-path: inset(100%)
+  clip: rect(1px 1px 1px 1px)
+  clip: rect(1px, 1px, 1px, 1px)
+  height: 1px
+  overflow: hidden
+  position: absolute
+  white-space: nowrap
+  width: 1px
+
+
+.rubric
+  color: red
+  font-style: italic

@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-menu-button slot="start"></ion-menu-button>
+    <ion-title>Psalter</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item *ngIf="psalmVersionOptions">
+          <ion-label position="stacked" i18n>Version</ion-label>
+          <ion-select [(ngModel)]="psalmVersion" (ionChange)="setPsalm()">
+            <ion-select-option *ngFor="let version of psalmVersionOptions" [value]="version" i18n>{{ versionLabels[version] || version }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item *ngIf="psalmNumberOptions">
+          <ion-label position="stacked" i18n>Psalm</ion-label>
+          <ion-select [(ngModel)]="psalmNumber" (ionChange)="setPsalm()">
+            <ion-select-option *ngFor="let num of psalmNumberOptions" [value]="num" i18n>Psalm {{ num }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ng-container *ngIf="psalm && psalm.length > 0">
+      <ion-row *ngFor="let obj of psalm">
+        <ion-col class="psalmverses-true font-garamond dropcaps-plain">
+          <ion-card class="object">
+          <venite-pray-psalm
+            [slug]="obj.slug"
+            [canticle]="obj.canticle"
+            [number]="obj.number"
+            [english]="obj.localname"
+            [latin]="obj.latinname"
+            [value]="obj.value"
+            [antiphon]="obj.antiphon"
+            [citation]="obj.citation"
+            [omit_gloria]="obj.omit_gloria"
+            [language]="obj.language"
+            [version]="obj.version"></venite-pray-psalm>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ng-container>
+  </ion-grid>
+</ion-content>
